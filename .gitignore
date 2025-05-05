@@ -1,6 +1,7 @@
 # ignore test files
 ygoproapitest.py
 master.json
+SmallWorld.code-workspace
 *.pyc
 
 # ignore carddata files: this should be instantiated locally
