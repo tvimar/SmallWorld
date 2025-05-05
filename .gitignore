@@ -1,6 +1,7 @@
 # ignore test files
 ygoproapitest.py
 master.json
+*.pyc
 
 # ignore carddata files: this should be instantiated locally
 carddata/
