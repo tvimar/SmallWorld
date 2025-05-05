@@ -12,6 +12,8 @@ def get_single_card(card_url_name: str):
     file_name = card_url_name + ".json"
     file_path = "carddata/" + file_name
 
+
+    Path('carddata/').mkdir(parents=True, exist_ok=True) 
     my_file = Path(file_path)
     if my_file.is_file():
         with open(file_path, 'r') as file:

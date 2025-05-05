@@ -5,3 +5,4 @@ master.json
 
 # ignore carddata files: this should be instantiated locally
 carddata/
+decklists/

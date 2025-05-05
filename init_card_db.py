@@ -14,6 +14,7 @@ url = "https://db.ygoprodeck.com/api/v7/cardinfo.php"
 
 response = requests.get(url)
 master_card_data = response.json()["data"]
+Path('carddata/').mkdir(parents=True, exist_ok=True) 
 
 for card in master_card_data:
     card_name = card["name"]

@@ -3,24 +3,50 @@ import json
 import urllib.parse
 from pathlib import Path
 
-from database import card_db
+from database import card_db 
+from database import deck_db
 
 def main():
-    print("Taking input")
-    cards = []
+    print("Would you like to use a save deck or use a new one? (Y/N)")
+    command = input()
 
-    inp = input()       # Get the input
-    while inp != "":        # Loop until it is a blank line
-        cards.append(inp)
-        inp = input()   # Get the input again
+    while command != 'Y' and command != 'N':
+        print("Please enter a valid command")
+        command = input()
+
+    deck = []
+
+    if command == 'Y':
+        deck = deck_db.import_decklist_from_file()
+    elif command == 'N':
+        print("Taking input")
+        cards = []
+
+        inp = input()       # Get the input
+        while inp != "":        # Loop until it is a blank line
+            cards.append(inp)
+            inp = input()   # Get the input again
+
+        # process input as deck
+        for card in cards:
+            if card[0] != '1' and card[0] != '2' and card[0] != '3':
+                continue
+            solo_name = card.partition(' ')[2]
+            deck.append(solo_name)
+
+        print("Would you like to save this decklist? Type 'Y' if yes, anything else if no")
+        command = input()
+
+        if command == 'Y':
+            deck_db.save_decklist(deck)
+        else:
+            print("Not saving decklist")
+            
 
     monsters = {}
 
-    for card in cards:
-        if card[0] != '1' and card[0] != '2' and card[0] != '3':
-            continue
-        solo_name = card.partition(' ')[2]
-        url_name = urllib.parse.quote_plus(solo_name)
+    for card in deck:
+        url_name = urllib.parse.quote_plus(card)
 
     # card_db function
         data = card_db.get_single_card(url_name)
@@ -56,30 +82,41 @@ def main():
                 monster_bridge.add(bridge)
         bridges[monster_name] = monster_bridge
 
-# get start name
-    print("Type EXACT starting monster name")
-    starter = input()       # Get the input
+    # input loop
+    while True:
+    # get start name
+        print("Type EXACT starting monster name")
+        starter = input()       # Get the input
 
-    if starter not in bridges.keys():
-        print("Starter not found")
-        exit
+        if starter not in bridges.keys():
+            print("Starter not found")
+            exit
 
-# get end name
-    print("Type EXACT ending monster name")
-    ender = input()       # Get the input
+    # get end name
+        print("Type EXACT ending monster name")
+        ender = input()       # Get the input
 
-    if ender not in bridges.keys():
-        print("Ender not found")
-        exit
+        if ender not in bridges.keys():
+            print("Ender not found")
+            exit
 
-    final_bridges = []
+        final_bridges = []
 
-    for potential_bridge in bridges[starter]:
-        if ender in bridges[potential_bridge]:
-            final_bridges.append(potential_bridge)
+        for potential_bridge in bridges[starter]:
+            if ender in bridges[potential_bridge]:
+                final_bridges.append(potential_bridge)
 
-    print("Number of bridges are {0}".format(len(final_bridges)))
-    for bridge in final_bridges:
-        print(bridge)
+        print("Number of bridges are {0}".format(len(final_bridges)))
+        for bridge in final_bridges:
+            print(bridge)
+
+        print("Would you do another bridge search? (Y/N)")
+        command = input()
+        while command != 'Y' and command != 'N':
+            print("Please enter a valid command")
+            command = input()
+        if command == 'N':
+            break
+    
 
 main()
